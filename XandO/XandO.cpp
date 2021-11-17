@@ -117,11 +117,10 @@ int minimax(int board[3][3], int depth, bool maxPlayer, int player, int alpha, i
                     else
                         score = minimax(newBoard, depth - 1, false, 1, alpha, beta);
 
-                    if (score > bestScore)
-                        bestScore = score;
-                    
-                    if (score > alpha)
-                        alpha = score;
+                    bestScore = score > bestScore ? score : bestScore;
+
+                    alpha = score > alpha ? score : alpha;
+
                     if (beta <= alpha){
                         breakLoop = true;
                         break;
@@ -141,6 +140,7 @@ int minimax(int board[3][3], int depth, bool maxPlayer, int player, int alpha, i
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 if (board[y][x] == 0) {
+                    //copies board
                     int newBoard[3][3] = {
                         {board[0][0],board[0][1],board[0][2]},
                         {board[1][0],board[1][1],board[1][2]},
@@ -156,12 +156,10 @@ int minimax(int board[3][3], int depth, bool maxPlayer, int player, int alpha, i
                     else
                         score = minimax(newBoard, depth - 1, true, 1, alpha, beta);
 
-                    if (score < bestScore) {
-                        bestScore = score;
-                    }
+                    bestScore = score < bestScore ? score : bestScore;
                     
-                    if (score < beta)
-                        beta = score;
+                    beta = score < beta ? score : beta;
+
                     if (beta <= alpha) {
                         breakLoop = true;
                         break;
@@ -181,6 +179,7 @@ void makeMove(int player) {
 
     minimaxCalls = 0;
 
+
     for (int y = 0; y < 3; y++) {
         for (int x = 0; x < 3; x++) {
             if (board[y][x] == 0) {
@@ -192,10 +191,11 @@ void makeMove(int player) {
 
                 newBoard[y][x] = player;
                 int score;
+
                 if (player == 1)
-                    score = minimax(newBoard, 9-turnNum, false, 2, -99999, 99999);
+                    score = minimax(newBoard, 9 - turnNum, false, 2, -99999, 99999);
                 else
-                    score = minimax(newBoard, 9-turnNum, false, 1, -99999, 99999);
+                    score = minimax(newBoard, 9 - turnNum, false, 1, -99999, 99999);
 
                 if (score > bestScore) {
                     bestScore = score;
@@ -329,8 +329,6 @@ void makeMoveNOPRUNE(int player) {
 
     board[bestMove[1]][bestMove[0]] = player;
 }
-
-
 
 int main()
 {
